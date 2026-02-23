@@ -3,154 +3,172 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fixed Component Switcher</title>
+    <title>Debashis Roy | Coming Soon</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&family=Poppins:wght@600;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --transition-speed: 0.8s;
+            --primary: #00f2fe;
+            --secondary: #4facfe;
+            --bg: #0b0e14;
+            --glass: rgba(255, 255, 255, 0.03);
+            --border: rgba(255, 255, 255, 0.1);
         }
 
-        body, html {
+        * {
             margin: 0;
             padding: 0;
-            height: 100%;
-            overflow: hidden; /* Disables actual page scrolling */
-            background-color: #000;
-            font-family: 'Inter', sans-serif;
+            box-sizing: border-box;
         }
 
-        /* All sections are stacked on top of each other */
-        section {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: #ffffff;
             height: 100vh;
             display: flex;
-            justify-content: center;
             align-items: center;
-            transition: transform var(--transition-speed) cubic-bezier(0.645, 0.045, 0.355, 1);
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        /* Animated Background Gradient */
+        .bg-glow {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 50% 50%, #1a2a44 0%, #0b0e14 100%);
+            z-index: -1;
+        }
+
+        .blob {
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            filter: blur(80px);
+            border-radius: 50%;
+            opacity: 0.15;
+            animation: move 20s infinite alternate;
+        }
+
+        @keyframes move {
+            from { transform: translate(-20%, -20%); }
+            to { transform: translate(20%, 20%); }
+        }
+
+        .container {
+            text-align: center;
+            padding: 3rem;
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            max-width: 600px;
+            width: 90%;
+            position: relative;
             z-index: 1;
         }
 
-        /* Initial state: push all slides (except first) off-screen to the right */
-        section.next {
-            transform: translateX(100%);
-        }
-
-        /* State when slide has been passed: push to the left */
-        section.prev {
-            transform: translateX(-100%);
-        }
-
-        /* Active slide is at center */
-        section.active {
-            transform: translateX(0);
-            z-index: 2;
-        }
-
-        .content {
-            text-align: center;
-            color: white;
-        }
-
-        h1 { font-size: 5rem; margin: 0; text-transform: uppercase; letter-spacing: -3px; }
-        
-        /* Section Backgrounds */
-        #s1 { background: #1a1a1a; }
-        #s2 { background: #2e1065; }
-        #s3 { background: #064e3b; }
-        #s4 { background: #450a0a; }
-
-        /* Progress Indicator */
-        .counter {
-            position: fixed;
-            bottom: 40px;
-            left: 40px;
-            color: white;
+        .logo {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 800;
             font-size: 1.2rem;
-            z-index: 100;
-            font-weight: bold;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 2rem;
+        }
+
+        h1 {
+            font-family: 'Poppins', sans-serif;
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 600;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+        }
+
+        p {
+            font-size: 1.1rem;
+            color: #a0aec0;
+            line-height: 1.6;
+            margin-bottom: 2.5rem;
+            font-weight: 300;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.5rem 1rem;
+            background: rgba(0, 242, 254, 0.1);
+            border-radius: 100px;
+            color: var(--primary);
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            border: 1px solid rgba(0, 242, 254, 0.2);
+        }
+
+        .pulse {
+            width: 8px;
+            height: 8px;
+            background-color: var(--primary);
+            border-radius: 50%;
+            margin-right: 10px;
+            box-shadow: 0 0 0 rgba(0, 242, 254, 0.4);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(0, 242, 254, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(0, 242, 254, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(0, 242, 254, 0); }
+        }
+
+        .loading-bar {
+            width: 100%;
+            height: 4px;
+            background: var(--border);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .loading-progress {
+            width: 40%;
+            height: 100%;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            animation: loading 3s ease-in-out infinite;
+        }
+
+        @keyframes loading {
+            0% { width: 0%; transform: translateX(-100%); }
+            50% { width: 50%; }
+            100% { width: 0%; transform: translateX(400%); }
         }
     </style>
 </head>
 <body>
-
-    <div class="counter"><span id="current-num">1</span> / 4</div>
-
-    <section id="s1" class="active">
-        <div class="content"><h1>Welcome.</h1></div>
-    </section>
-
-    <section id="s2" class="next">
-        <div class="content"><h1>Projects.</h1></div>
-    </section>
-
-    <section id="s3" class="next">
-        <div class="content"><h1>Skills.</h1></div>
-    </section>
-
-    <section id="s4" class="next">
-        <div class="content"><h1>Contact.</h1></div>
-    </section>
-
-    <script>
-        const sections = document.querySelectorAll('section');
-        const counter = document.getElementById('current-num');
-        let currentIndex = 0;
-        let isAnimating = false;
-
-        function updateSections(direction) {
-            if (isAnimating) return;
-            
-            // Check boundaries
-            if (direction === 'down' && currentIndex < sections.length - 1) {
-                isAnimating = true;
-                // Move current to 'prev'
-                sections[currentIndex].classList.remove('active');
-                sections[currentIndex].classList.add('prev');
-                // Move next to 'active'
-                currentIndex++;
-                sections[currentIndex].classList.remove('next');
-                sections[currentIndex].classList.add('active');
-            } 
-            else if (direction === 'up' && currentIndex > 0) {
-                isAnimating = true;
-                // Move current to 'next'
-                sections[currentIndex].classList.remove('active');
-                sections[currentIndex].classList.add('next');
-                // Move prev to 'active'
-                currentIndex--;
-                sections[currentIndex].classList.remove('prev');
-                sections[currentIndex].classList.add('active');
-            }
-
-            counter.innerText = currentIndex + 1;
-
-            // Prevent rapid-fire scrolling
-            setTimeout(() => {
-                isAnimating = false;
-            }, 800); 
-        }
-
-        // Listen for wheel events
-        window.addEventListener('wheel', (e) => {
-            if (e.deltaY > 0) {
-                updateSections('down');
-            } else {
-                updateSections('up');
-            }
-        });
-
-        // Add touch support for mobile
-        let touchStart = 0;
-        window.addEventListener('touchstart', (e) => {
-            touchStart = e.touches[0].clientY;
-        });
-        window.addEventListener('touchend', (e) => {
-            let touchEnd = e.changedTouches[0].clientY;
-            if (touchStart - touchEnd > 50) updateSections('down');
-            if (touchStart - touchEnd < -50) updateSections('up');
-        });
-    </script>
+    <div class="bg-glow"></div>
+    <div class="blob"></div>
+    
+    <div class="container">
+        <div class="logo">DEBASHIS.PRO.BD</div>
+        
+        <div class="status-badge">
+            <span class="pulse"></span> SYSTEM INITIALIZING
+        </div>
+        
+        <h1>Something beautiful is taking shape.</h1>
+        
+        <p>We are building a high-performance digital experience. The interface is being polished and will appear shortly.</p>
+        
+        <div class="loading-bar">
+            <div class="loading-progress"></div>
+        </div>
+    </div>
 </body>
 </html>
