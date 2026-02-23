@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fixed Component Switcher</title>
+    <style>
+        :root {
+            --transition-speed: 0.8s;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden; /* Disables actual page scrolling */
+            background-color: #000;
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* All sections are stacked on top of each other */
+        section {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: transform var(--transition-speed) cubic-bezier(0.645, 0.045, 0.355, 1);
+            z-index: 1;
+        }
+
+        /* Initial state: push all slides (except first) off-screen to the right */
+        section.next {
+            transform: translateX(100%);
+        }
+
+        /* State when slide has been passed: push to the left */
+        section.prev {
+            transform: translateX(-100%);
+        }
+
+        /* Active slide is at center */
+        section.active {
+            transform: translateX(0);
+            z-index: 2;
+        }
+
+        .content {
+            text-align: center;
+            color: white;
+        }
+
+        h1 { font-size: 5rem; margin: 0; text-transform: uppercase; letter-spacing: -3px; }
+        
+        /* Section Backgrounds */
+        #s1 { background: #1a1a1a; }
+        #s2 { background: #2e1065; }
+        #s3 { background: #064e3b; }
+        #s4 { background: #450a0a; }
+
+        /* Progress Indicator */
+        .counter {
+            position: fixed;
+            bottom: 40px;
+            left: 40px;
+            color: white;
+            font-size: 1.2rem;
+            z-index: 100;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="counter"><span id="current-num">1</span> / 4</div>
+
+    <section id="s1" class="active">
+        <div class="content"><h1>Welcome.</h1></div>
+    </section>
+
+    <section id="s2" class="next">
+        <div class="content"><h1>Projects.</h1></div>
+    </section>
+
+    <section id="s3" class="next">
+        <div class="content"><h1>Skills.</h1></div>
+    </section>
+
+    <section id="s4" class="next">
+        <div class="content"><h1>Contact.</h1></div>
+    </section>
+
+    <script>
+        const sections = document.querySelectorAll('section');
+        const counter = document.getElementById('current-num');
+        let currentIndex = 0;
+        let isAnimating = false;
+
+        function updateSections(direction) {
+            if (isAnimating) return;
+            
+            // Check boundaries
+            if (direction === 'down' && currentIndex < sections.length - 1) {
+                isAnimating = true;
+                // Move current to 'prev'
+                sections[currentIndex].classList.remove('active');
+                sections[currentIndex].classList.add('prev');
+                // Move next to 'active'
+                currentIndex++;
+                sections[currentIndex].classList.remove('next');
+                sections[currentIndex].classList.add('active');
+            } 
+            else if (direction === 'up' && currentIndex > 0) {
+                isAnimating = true;
+                // Move current to 'next'
+                sections[currentIndex].classList.remove('active');
+                sections[currentIndex].classList.add('next');
+                // Move prev to 'active'
+                currentIndex--;
+                sections[currentIndex].classList.remove('prev');
+                sections[currentIndex].classList.add('active');
+            }
+
+            counter.innerText = currentIndex + 1;
+
+            // Prevent rapid-fire scrolling
+            setTimeout(() => {
+                isAnimating = false;
+            }, 800); 
+        }
+
+        // Listen for wheel events
+        window.addEventListener('wheel', (e) => {
+            if (e.deltaY > 0) {
+                updateSections('down');
+            } else {
+                updateSections('up');
+            }
+        });
+
+        // Add touch support for mobile
+        let touchStart = 0;
+        window.addEventListener('touchstart', (e) => {
+            touchStart = e.touches[0].clientY;
+        });
+        window.addEventListener('touchend', (e) => {
+            let touchEnd = e.changedTouches[0].clientY;
+            if (touchStart - touchEnd > 50) updateSections('down');
+            if (touchStart - touchEnd < -50) updateSections('up');
+        });
+    </script>
+</body>
+</html>
